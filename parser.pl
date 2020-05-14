@@ -29,7 +29,7 @@ n0(n0(laboratorio), [[m,_,s],[com,inanim]]) --> [laboratorio].
 n0(n0(noam), [[m,3,s],[prop,anim]]) --> [noam].
 n0(n0(alan), [[m,3,s],[prop,anim]]) --> [alan].
 n0(n0(irene), [[f,3,s],[prop,anim]]) --> [irene].
-n0(n0(bárbara), [[f,3,s],[prop,anim]]) --> [bárbara].
+n0(n0(bárbara), [[f,3,s],[prop,anim]]) --> [barbara].
 n0(n0(boston), [[m,3,s],[prop,inanim]]) --> [boston].
 n0(n0(londres), [[m,3,s],[prop,inanim]]) --> [londres].
 
@@ -93,8 +93,9 @@ d0(d0(unas), [[_],[f,3,p],[com,_],[np],[-wh]]) --> [unas].
 %	DETERMINANTES WH
 d0(d0(quién), [[_],[_,3,s],[com,anim],[],[+wh]]) --> [quién].
 d0(d0(quiénes), [[_],[_,3,p],[com,anim],[],[+wh]]) --> [quiénes].
-d0(d0(h), [[_],[_,3,_],[com,anim],[],[+wh]]) --> [].				% huella
+d0(d0(h), [[_],[_,3,_],[_,_],[],[+wh]]) --> [].				% huella
 
+% verbo Features = [[tiempo],[rasgos phi],[marco de subcategorización]]
 %   VERBOS
 v0(v0(vi), [[pret],[_,1,s],[dp,cp]]) --> [vi].
 v0(v0(vimos), [[pret],[_,1,p],[dp,cp]]) --> [vimos].
@@ -103,11 +104,11 @@ v0(v0(vieron), [[pret],[_,2,p],[dp,cp]]) --> [vieron].
 v0(v0(vio), [[pret],[_,3,s],[dp,cp]]) --> [vio].
 v0(v0(vieron), [[pret],[_,3,p],[dp,cp]]) --> [vieron].
 
-v0(v0(saludé), [[pret],[_,1,s],[dp]]) --> [saludé].
+v0(v0(saludé), [[pret],[_,1,s],[dp]]) --> [salude].
 v0(v0(saludamos), [[pret],[_,1,p],[dp]]) --> [saludamos].
 v0(v0(saludaste), [[pret],[_,2,s],[dp]]) --> [saludaste].
 v0(v0(saludaron), [[pret],[_,2,p],[dp]]) --> [saludaron].
-v0(v0(saludó), [[pret],[_,3,s],[dp]]) --> [saludó].
+v0(v0(saludó), [[pret],[_,3,s],[dp]]) --> [saludo].
 v0(v0(saludaron), [[pret],[_,3,p],[dp]]) --> [saludaron].
 
 v0(v0(dije), [[pret],[_,1,s],[cp]]) --> [dije].
@@ -138,6 +139,7 @@ v0(v0(vivían), [[pret],[_,2,p],[pp]]) --> [vivían].
 v0(v0(vivía), [[pret],[_,3,s],[pp]]) --> [vivía].
 v0(v0(vivían), [[pret],[_,3,p],[pp]]) --> [vivían].
 
+% adjetivo Features = [rasgos phi]
 %   ADJETIVOS
 adj0(adj0(famoso), [m,_,s]) --> [famoso].
 adj0(adj0(famosos), [m,_,p]) --> [famosos].
@@ -154,12 +156,14 @@ adj0(adj0(simpáticos), [m,_,p]) --> [simpáticos].
 adj0(adj0(simpática), [f,_,s]) --> [simpática].
 adj0(adj0(simpáticas), [f,_,p]) --> [simpáticas].
 
+% adverbio Features = [wh]
 %   ADVERBIOS
 adv0(adv0(ayer), [-wh]) --> [ayer].
 adv0(adv0(hoy), [-wh]) --> [hoy].
 adv0(adv0(cómo), [+wh]) --> [cómo].
 adv0(adv0(cuándo), [+wh]) --> [cuándo].
 adv0(adv0(dónde), [+wh]) --> [dónde].
+%adv0(adv0(h), [+wh]) --> [].
 
 %   INTENSIFICADORES
 int0(int0(muy), []) --> [muy].
@@ -174,15 +178,17 @@ p0(p0(a), []) --> [a].
 %   INFLECCION
 i0(i0(fin), []) --> [].
 
+% complementante Features = [[interrogativa], [wh]]
 %   COMPLEMENTANTES
 %c0(c0([]), []) --> [].
 %c0(c0(que), []) --> [que].
 %c0(c0(si), []) --> [si].
-c0(c0([]), [-q, -wh]) --> [].
-c0(c0([]), [+q, +wh]) --> [].
-c0(c0([]), [-q, +wh]) --> [].
-c0(c0(que), [-q, -wh]) --> [que].
-c0(c0(si), [-q, -wh]) --> [si].
+c0(c0([]), [[-q], [-wh]]) --> [].
+c0(c0([]), [[+q], [+wh]]) --> [].
+c0(c0([]), [[-q], [+wh]]) --> [].
+c0(c0(que), [[-q], [-wh]]) --> [que].
+c0(c0(que), [[-q], [+wh]]) --> [que].
+c0(c0(si), [[-q], [-wh]]) --> [si].
 
 %   CONECTORES
 con0(con0(y), []) --> [y].
@@ -193,31 +199,34 @@ con0(con0(u), []) --> [u].
 
 %-----------Reglas sintácticas-----------
 
-cbar(cbar(C,IP), [Features,Q,Wh]) --> c0(C,[Q,Wh]), ip(IP,Features).
-cp(cp(DP,Cbar), [Features,Q,Wh]) --> dp(DP,[_,Wh]), cbar(Cbar,[Features,Q,Wh]).
-cp(cp(AdvP,Cbar), [Features,Q,Wh]) --> advp(AdvP,[Wh]), cbar(Cbar,[Features,Q,Wh]).
-cp(cp(PP,Cbar), [Features,Q,Wh]) --> pp(PP,[Wh]), cbar(Cbar,[Features,Q,Wh]).
-cp(cp(Cbar), Features) --> cbar(Cbar,Features).
+cbar(cbar(C,IP), [T,Q,Wh]) --> c0(C,[Q,Wh]), ip(IP,[T,Wh]).
+cp(cp(Cbar), [T,Q,Wh]) --> cbar(Cbar,[T,Q,Wh]), {member(-q,Q)},  {member(-wh,Wh)}.
+cp(cp(Cbar), [T,Q,[+wh]]) --> cbar(Cbar,[T,Q,[+wh]]).           %clausula relativa
+cp(cp(DP,Cbar), [T,[-q],[+wh]]) --> dp(DP,[_,_,[+wh]]), cbar(Cbar,[T,[-q],[+wh]]).           %pregunta
+%cp(cp(AdvP,Cbar), [Features,Q,Wh]) --> advp(AdvP,[+wh]), cbar(Cbar,[Features,Q,Wh]), {member(+q,Q)}.      %pregunta
+cp(cp(PP,Cbar), [T,Q,Wh]) --> pp(PP,[Wh]), cbar(Cbar,[T,Q,Wh]), {member(+q,Q)}.             %pregunta
 cp(CP) --> cp(CP,_).
 
-ibar(ibar(I,VP), [T,Phi]) --> i0(I,_), vp(VP,[T,Phi]).
-ip(ip(DP,Ibar), T) --> dp(DP,[Case,Phi,_]), ibar(Ibar,[T,Phi]), {member(nom,Case)}.
+ibar(ibar(I,VP), [T,Phi,Wh]) --> i0(I,_), vp(VP,[T,Phi,Wh]).
+ip(ip(DP,Ibar), [T,[-wh]]) --> dp(DP,[Case,Phi,[-wh]]), ibar(Ibar,[T,Phi,[-wh]]), {member(nom,Case)}.
+ip(ip(DP,Ibar), [T,[+wh]]) --> dp(DP,[Case,Phi,[-wh]]), ibar(Ibar,[T,Phi,[+wh]]), {member(nom,Case)}.
+ip(ip(DP,Ibar), [T,[+wh]]) --> dp(DP,[Case,Phi,[+wh]]), ibar(Ibar,[T,Phi,[-wh]]), {member(nom,Case)}.
 %ip(ip(AdvP,IP), T) --> advp(AdvP,_), ip(IP,T).                  %adjuntos
 %ip(ip(IP,AdvP), T) --> ip(IP,T), advp(AdvP,_).                  %adjuntos
 
 v0(v0(D,V), [T,Phi,[]]) --> d0(D,[[acus],_,_,[v0],[-wh]]), v0(V,[T,Phi,Subcat]), {member(dp,Subcat)}. %cliticos
-vbar(vbar(V), [T,Phi]) --> v0(V,[T,Phi,[]]).                    %intransitivos
-vbar(vbar(V,CP), [T,Phi]) --> v0(V,[T,Phi,Subcat]), cp(CP,_), {member(cp,Subcat)}.
-vbar(vbar(V,AdjP), [T,Phi]) --> v0(V,[T,Phi,Subcat]), adjp(AdjP,Phi), {member(adjp,Subcat)}.
-vbar(vbar(V,PP), [T,Phi]) --> v0(V,[T,Phi,Subcat]), pp(PP,_), {member(pp,Subcat)}.
-vbar(vbar(V,DP), [T,Phi]) --> v0(V,[T,Phi,Subcat]), dp(DP,[[acus],_,_]), {member(dp,Subcat)}.
+vbar(vbar(V), [T,Phi,[-wh]]) --> v0(V,[T,Phi,[]]).                    %intransitivos
+vbar(vbar(V,CP), [T,Phi,[-wh]]) --> v0(V,[T,Phi,Subcat]), cp(CP,_), {member(cp,Subcat)}.
+vbar(vbar(V,AdjP), [T,Phi,[-wh]]) --> v0(V,[T,Phi,Subcat]), adjp(AdjP,Phi), {member(adjp,Subcat)}.
+vbar(vbar(V,PP), [T,Phi,[-wh]]) --> v0(V,[T,Phi,Subcat]), pp(PP,[-wh]), {member(pp,Subcat)}.
+vbar(vbar(V,DP), [T,Phi,[-wh]]) --> v0(V,[T,Phi,Subcat]), dp(DP,[[acus],_,[-wh]]), {member(dp,Subcat)}.
 vp(vp(Vbar), Features) --> vbar(Vbar,Features).
-vp(vp(VP,PP), Features) --> vp(VP,Features), pp(PP,_).          %adjuntos
-vp(vp(VP,AdvP), Features) --> vp(VP,Features), advp(AdvP,_).    %adjuntos
-vp(vp(AdvP,VP), Features) --> advp(AdvP,_), vp(VP,Features).    %adjuntos
+vp(vp(VP,PP), Features) --> vp(VP,Features), pp(PP,[-wh]).          %adjuntos
+vp(vp(VP,AdvP), Features) --> vp(VP,Features), advp(AdvP,[-wh]).    %adjuntos
+%vp(vp(AdvP,VP), Features) --> advp(AdvP,_), vp(VP,Features).    %adjuntos
 
-dbar(dbar(D), [Case,Phi,[-wh]]) --> d0(D,[Case,Phi,[prop,anim],[],[-wh]]).  %det pronominal
-dbar(dbar(D), [Case,Phi,[+wh]]) --> d0(D,[Case,Phi,_,[],[+wh]]).  %det wh
+dbar(dbar(D), [Case,Phi,Wh]) --> d0(D,[Case,Phi,[prop,anim],[],Wh]), {member(-wh,Wh)}.  %det pronominal
+dbar(dbar(D), [Case,Phi,Wh]) --> d0(D,[Case,Phi,_,[],Wh]), {member(+wh,Wh)}.  %det wh
 dbar(dbar(D,NP), [Case,Phi,[-wh]]) --> d0(D,[Case,Phi,Anim,[np],[-wh]]), np(NP,[Phi,Anim]).
 dp(dp(Dbar), Features) --> dbar(Dbar,Features).
 dp(dp(DP,ConP), [[Case],[Gen,3,p],Wh]) --> dp(DP,[Case1,[Gen,Pers1,_],Wh]), conp(ConP,[[Case2,[Gen,Pers2,_]],[dp]]), {not(Pers1 is 1;Pers2 is 1)}, {sharemember(Case,Case1,Case2)}.  %adjuntos
@@ -228,10 +237,11 @@ dp(dp(DP,ConP), [[Case],[m,3,p],Wh]) --> dp(DP,[Case1,[Gen1,Pers1,_],Wh]), conp(
 sharemember(Member, List1, List2) :- member(Member,List1), member(Member,List2).
 
 nbar(nbar(N), Features) --> n0(N,Features).
+nbar(nbar(N,CP), Features) --> n0(N,Features), cp(CP,[_,_,[+wh]]).
 np(np(Nbar), Features) --> nbar(Nbar,Features).
-np(np(NP,PP), Features) --> np(NP,Features), pp(PP,_).          %adjuntos
+np(np(NP,PP), Features) --> np(NP,Features), pp(PP,[-wh]).          %adjuntos
 np(np(NP,AdjP), [Phi,Anim]) --> np(NP,[Phi,Anim]), adjp(AdjP,Phi).                              %adjuntos
-np(np(AdjP,NP), [Phi,Anim]) --> adjp(AdjP,Phi), np(NP,[Phi,Anim]).                              %adjuntos             %adjuntos
+np(np(AdjP,NP), [Phi,Anim]) --> adjp(AdjP,Phi), np(NP,[Phi,Anim]).                              %adjuntos
 np(np(NP,ConP), [[Gen,_,p],_]) --> np(NP,[[Gen,_,Num],_]), conp(ConP,[[[Gen,_,Num],_],[np]]).   %adjuntos
 np(np(NP,ConP), [[m,_,p],_]) --> np(NP,[[Gen1,_,_],_]), conp(ConP,[[[Gen2,_,_],_],[np]]), {not(Gen1==Gen2)}.   %adjuntos
 
@@ -244,7 +254,7 @@ adjp(adjp(Adjbar), Phi) --> adjbar(Adjbar,Phi).
 adjp(adjp(Int,Adjbar), Phi) --> int0(Int,_), adjbar(Adjbar,Phi). %adjuntos
 adjp(adjp(AdjP,ConP), Features) --> adjp(AdjP,Features), conp(ConP,[Features,[adjp]]).          %adjuntos
 
-pbar(pbar(P,DP), _) --> p0(P,_), dp(DP,[Case,_]), {member(obl,Case)}.
+pbar(pbar(P,DP), Wh) --> p0(P,_), dp(DP,[Case,_,Wh]), {member(obl,Case)}.
 pbar(pbar(P,AdvP), Wh) --> p0(P,_), advp(AdvP,Wh).
 pp(pp(Pbar), Wh) --> pbar(Pbar,Wh).
 pp(pp(PP,ConP), Wh) --> pp(PP,Wh), conp(ConP,[_,[pp]]).           %adjuntos
@@ -255,7 +265,5 @@ conbar(conbar(Con,AdjP), [Features,[adjp]]) --> con0(Con,_), adjp(AdjP,Features)
 conbar(conbar(Con,AdvP), [Features,[advp]]) --> con0(Con,_), advp(AdvP,Features).
 conbar(conbar(Con,PP), [Features,[pp]]) --> con0(Con,_), pp(PP,Features).
 conp(conp(Conbar), Features) --> conbar(Conbar,Features).
-
-
 
 
