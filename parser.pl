@@ -91,6 +91,7 @@ d0(d0(una), [[_],[f,3,s],[com,_],[np],[-wh]]) --> [una].
 d0(d0(unas), [[_],[f,3,p],[com,_],[np],[-wh]]) --> [unas].
 
 %	DETERMINANTES WH
+d0(d0(qué), [[_],[_,3,s],[com,inanim],[],[+wh]]) --> [qué].
 d0(d0(quién), [[_],[_,3,s],[com,anim],[],[+wh]]) --> [quién].
 d0(d0(quiénes), [[_],[_,3,p],[com,anim],[],[+wh]]) --> [quiénes].
 d0(d0(h), [[_],[_,3,_],[_,_],[],[+wh]]) --> [].				% huella
@@ -202,7 +203,7 @@ con0(con0(u), []) --> [u].
 cbar(cbar(C,IP), [T,Q,Wh]) --> c0(C,[Q,Wh]), ip(IP,[T,Wh]).
 cp(cp(Cbar), [T,Q,Wh]) --> cbar(Cbar,[T,Q,Wh]), {member(-q,Q)},  {member(-wh,Wh)}.
 cp(cp(Cbar), [T,Q,[+wh]]) --> cbar(Cbar,[T,Q,[+wh]]).           %clausula relativa
-cp(cp(DP,Cbar), [T,[-q],[+wh]]) --> dp(DP,[_,_,[+wh]]), cbar(Cbar,[T,[-q],[+wh]]).           %pregunta
+cp(cp(DP,Cbar), [T,[-q],[+wh]]) --> dp(DP,[_,_,[+wh]]), cbar(Cbar,[T,_,[+wh]]).           %pregunta
 %cp(cp(AdvP,Cbar), [Features,Q,Wh]) --> advp(AdvP,[+wh]), cbar(Cbar,[Features,Q,Wh]), {member(+q,Q)}.      %pregunta
 cp(cp(PP,Cbar), [T,Q,Wh]) --> pp(PP,[Wh]), cbar(Cbar,[T,Q,Wh]), {member(+q,Q)}.             %pregunta
 cp(CP) --> cp(CP,_).
@@ -219,7 +220,7 @@ vbar(vbar(V), [T,Phi,[-wh]]) --> v0(V,[T,Phi,[]]).                    %intransit
 vbar(vbar(V,CP), [T,Phi,[-wh]]) --> v0(V,[T,Phi,Subcat]), cp(CP,_), {member(cp,Subcat)}.
 vbar(vbar(V,AdjP), [T,Phi,[-wh]]) --> v0(V,[T,Phi,Subcat]), adjp(AdjP,Phi), {member(adjp,Subcat)}.
 vbar(vbar(V,PP), [T,Phi,[-wh]]) --> v0(V,[T,Phi,Subcat]), pp(PP,[-wh]), {member(pp,Subcat)}.
-vbar(vbar(V,DP), [T,Phi,[-wh]]) --> v0(V,[T,Phi,Subcat]), dp(DP,[[acus],_,[-wh]]), {member(dp,Subcat)}.
+vbar(vbar(V,DP), [T,Phi,Wh]) --> v0(V,[T,Phi,Subcat]), dp(DP,[[acus],_,Wh]), {member(dp,Subcat)}.
 vp(vp(Vbar), Features) --> vbar(Vbar,Features).
 vp(vp(VP,PP), Features) --> vp(VP,Features), pp(PP,[-wh]).          %adjuntos
 vp(vp(VP,AdvP), Features) --> vp(VP,Features), advp(AdvP,[-wh]).    %adjuntos
@@ -265,5 +266,6 @@ conbar(conbar(Con,AdjP), [Features,[adjp]]) --> con0(Con,_), adjp(AdjP,Features)
 conbar(conbar(Con,AdvP), [Features,[advp]]) --> con0(Con,_), advp(AdvP,Features).
 conbar(conbar(Con,PP), [Features,[pp]]) --> con0(Con,_), pp(PP,Features).
 conp(conp(Conbar), Features) --> conbar(Conbar,Features).
+
 
 
