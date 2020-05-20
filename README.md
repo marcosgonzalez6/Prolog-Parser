@@ -10,3 +10,5 @@ Replace "Sentence" with a sentence made up of the words in the lexicon separated
 For example: the sentence `Quiénvio a Irene?` would be entered as `cp(CP,_,[quién,vio,a,irene],_).` 
 Click Run! on the bottom right corner to run the query. 
 
+### Video demonstration 
+https://youtu.be/-wntHI1-c3E
